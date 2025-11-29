@@ -4,6 +4,7 @@
     --cor-fundo : #63997a;
     --cor-btn-sombra : #9D1522;
     --cor-btn : #F29100;
+    --cor-btn-selecionado: #f9bc61;
     --cor-letra: #24434b;
 
     --fonte-btn: "DM Mono", monospace;
@@ -24,6 +25,17 @@ body {
     align-items: center;
     background: radial-gradient(circle at center, #72b7c8,#24434b);
     gap: 30px;
+    
+}
+
+.nivel {
+    padding: 20px;
+    font-size: 2em;
+    font-family: var(--fonte-pergunta);
+    color: white;
+    text-shadow: 0px 4px 0px var(--cor-fundo);
+    position: absolute;
+    left: 0;
 }
 
 .titulo {
@@ -41,19 +53,19 @@ body {
 
 .pergunta {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     gap: 20px;
-    width: 100%;
+    width: 70%;
     
 }
 
 .pergunta p {
     font-size: 3em;
     font-family: var(--fonte-pergunta);
-    color: var(--cor-letra);
-    text-shadow: 0px 5px #bfbc84;
+    color: white;
+    text-shadow: 0px 6px var(--cor-letra);
 }
 
 .img__perguntas {
@@ -63,19 +75,18 @@ body {
     gap: 20px;
 }
 
+
 .btn__respostas {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 30px;
-    padding: 0 50px;
-    
-    
+    padding: 0px 50px 50px 50px;
+    flex-wrap: wrap;
     
 }
 
 .btn {
-    
     height: 100%;
     box-shadow: 0px 20px 0 var(--cor-btn-sombra);
     border: none;
@@ -93,7 +104,6 @@ body {
     transition: transform 0.05s, box-shadow 0.05s;
     color: white;
     cursor: pointer;
-    
 }
 
 
@@ -104,19 +114,21 @@ body {
 }
 
 .timao__icon {
-    width: 120px;
+    width: 200px;
     padding: 10px;
 }
 
 .palmeiras__icon {
-    width: 130px;
+    width: 200px;
     padding: 10px;
 
 }
 
 .selecionado {
     transform: translateY(15px);
+    background-color: var(--cor-btn-selecionado);
     box-shadow: 0px 5px 0 var(--cor-btn-sombra);
+    
 }
 
 .certo {
@@ -139,7 +151,7 @@ audio{
     height: 35px;
     padding: 5px;
     border-radius: 0px 0px 0px 10px;
-    position: fixed;
+    position: absolute;
     right: 0;
 }
 
@@ -148,7 +160,8 @@ audio{
 }
 
 .texto__gerado {
-    padding: 5px;
-    font-size: 1.5em;
+    padding: 15px;
+    font-size: 1em;
     color: white;
 }
+

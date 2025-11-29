@@ -1,7 +1,6 @@
 // =================
 // ELEMENTOS
 // =================
-const btn_div_resposta = document.querySelectorAll('.btn');
 const pergunta = document.querySelector('.pergunta p');
 //MUSICA
 const musica = document.querySelector('audio');
@@ -33,6 +32,14 @@ btn_musica.addEventListener('click', () => {
 })
 
 // =================
+// NIVEL
+// =================
+const pergunta_nivel = document.querySelector('.nivel');
+let perguntaAtual = 3;
+pergunta_nivel.innerHTML = `PERGUNTA ${perguntaAtual + 1}`
+
+
+// =================
 // PERGUNTAS
 // =================
 
@@ -42,32 +49,42 @@ const quiz = [
         alternativas: ['imagens/timao_img.png', 'imagens/palmeiras_img.png'],
         nome: ['timao', 'pal'],
         classe: ['btn__timao', 'btn__palmeiras'],
+        class_img: ['timao__icon', 'palmeiras__icon'],
         correto: 'imagens/palmeiras_img.png'
     },
     {
         pergunta: "Quantos ovos uma barata pode produzir?",
         alternativas: ['100', '500', '800'],
+        nome: ['cem', 'quientos', 'oitocentos'],
+        classe: ['cem', 'quientos', 'oitocentos'],
+        class_img: ['none', 'none', 'none'],
         correto: '800'
     },
     {
-        pergunta: "É verdade que baratas tem uma incrivel regeneração e podem viver dias sem a cabeça e, se perder uma das patas, ela consegue se regenerar em poucos dias?",
-        alternativas: ['Sim', 'Não'],
-        correto: 'Sim'
+        pergunta: "As baratas tem uma incrivel regeneração e podem viver dias sem a cabeça e, se perder uma das patas, elas conseguem se regenerar em poucos dias.",
+        alternativas: ['Verdade', 'Mentira'],
+        nome: ['verdade', 'verdade'],
+        classe: ['verdade', 'mentira'],
+        class_img: ['none', 'none'],
+        correto: 'Verdade'
     },
     {
         pergunta: "Que música tocou de fundo o jogo todo?",
-        alternativas: ['Camila', `Camila, Camila`, `Camila, Camila, Camila`],
+        alternativas: ['Camila', `Camila, Camila`, `Proibida pra Mim`],
+        nome: ['camila', 'camila__camila', 'proibida_pra_mim'],
+        classe: ['camila', 'camila__camila', 'proibida_pra_mim'],
+        class_img: ['none', 'none', 'none'],
         correto: 'Camila, Camila'
     }
 
 ]
-let perguntaAtual = 3;
 pergunta.innerHTML = quiz[perguntaAtual].pergunta;
 
 // =================
 // Criando Botões de resposta
 // =================
-function criaBtnResposta(indice, nome, classe) {
+function criaBtnResposta(indice, nome, classe, class_img) {
+    
     let divRespostas = document.querySelector('.btn__respostas')
     //Botão da resposta e colocando ele na section "btn__resposta"
     let btn_resposta = document.createElement('button');
@@ -76,7 +93,7 @@ function criaBtnResposta(indice, nome, classe) {
     
     if(perguntaAtual == 0) {
         let imagemGerada = document.createElement('img');
-        imagemGerada.classList.add('timao__icon');
+        imagemGerada.classList.add(class_img);
         imagemGerada.src = quiz[0].alternativas[indice];
         btn_resposta.appendChild(imagemGerada)
     }else{
@@ -86,43 +103,38 @@ function criaBtnResposta(indice, nome, classe) {
         btn_resposta.appendChild(textoGerado)
     }
     
-    
-    
+
     divRespostas.appendChild(btn_resposta);
+
 }
 
 //Criando botões dinamicos
 
 for(let i = 0; quiz[perguntaAtual].alternativas.length > i; i++){
     
-    criaBtnResposta(i, quiz[0].nome[i], quiz[0].classe[i]);
+    criaBtnResposta(i, quiz[perguntaAtual].nome[i], quiz[perguntaAtual].classe[i],quiz[perguntaAtual].class_img[i]);
+    
 }
 
 // =================
 // BOTÕES RESPOSTAS
 // =================
 //Selecionando o botão da resposta
+let btn_todas_respostas = document.querySelectorAll('.btn');
 
-btn_div_resposta.forEach(btn => {
-    btn.addEventListener('click', () => {
-        let nome = btn.getAttribute("name");
-        
-        //Reiniciando os estilos dos dois botões quando clicar em algum dos botões
-        btn_div_resposta.forEach(b => {
-            b.classList.remove('selecionado', 'certo', 'errado');
+btn_todas_respostas.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            let nomeDiv = btn.getAttribute('name');
+            
+            let btn_todas_respostas = document.querySelectorAll('.btn');
+
+            btn_todas_respostas.forEach(b => {
+                b.classList.remove('selecionado');
+            })
+
+            btn.classList.add('selecionado');
+
         })
-        
-        //Adicionando o estilo para cada resposta
-        if(nome == 'timao'){
-            btn.classList.add('selecionado', 'errado')
+})
 
-        }
-        if(nome == 'pal') {
-            btn.classList.add('selecionado', 'certo');
-        }
-        
-    })
-});
-
-
-
+//Dando a resposta correta

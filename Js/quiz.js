@@ -56,12 +56,12 @@ const quiz = [
     },
     {
         pergunta: "Que música tocou de fundo o jogo todo?",
-        alternativas: ['Camila', 'Camila, Camila', 'Camila, Camila, Camila'],
+        alternativas: ['Camila', `Camila, Camila`, `Camila, Camila, Camila`],
         correto: 'Camila, Camila'
     }
 
 ]
-let perguntaAtual = 0;
+let perguntaAtual = 3;
 pergunta.innerHTML = quiz[perguntaAtual].pergunta;
 
 // =================

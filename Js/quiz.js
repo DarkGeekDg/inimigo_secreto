@@ -46,8 +46,8 @@ const quiz = [
     },
     {
         pergunta: "Quantos ovos uma barata pode produzir?",
-        alternativas: [100, 500, 800],
-        correto: 800
+        alternativas: ['100', '500', '800'],
+        correto: '800'
     },
     {
         pergunta: "É verdade que baratas tem uma incrivel regeneração e podem viver dias sem a cabeça e, se perder uma das patas, ela consegue se regenerar em poucos dias?",
@@ -61,8 +61,8 @@ const quiz = [
     }
 
 ]
-let perguntaAtual = 1;
-pergunta.innerHTML = quiz[1].pergunta;
+let perguntaAtual = 0;
+pergunta.innerHTML = quiz[perguntaAtual].pergunta;
 
 // =================
 // Criando Botões de resposta
@@ -82,7 +82,7 @@ function criaBtnResposta(indice, nome, classe) {
     }else{
         let textoGerado = document.createElement('p');
         textoGerado.classList.add('texto__gerado');
-        textoGerado.textContent = quiz[1].alternativas[indice];
+        textoGerado.textContent = quiz[perguntaAtual].alternativas[indice];
         btn_resposta.appendChild(textoGerado)
     }
     
@@ -93,11 +93,9 @@ function criaBtnResposta(indice, nome, classe) {
 
 //Criando botões dinamicos
 
-for(let i = 0; quiz[1].alternativas.length > i; i++){
+for(let i = 0; quiz[perguntaAtual].alternativas.length > i; i++){
     
     criaBtnResposta(i, quiz[0].nome[i], quiz[0].classe[i]);
-    
-    
 }
 
 // =================

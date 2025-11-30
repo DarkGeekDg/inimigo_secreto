@@ -34,8 +34,8 @@ btn_musica.addEventListener('click', () => {
 // =================
 // NIVEL
 // =================
-const pergunta_nivel = document.querySelector('.nivel');
 let perguntaAtual = 3;
+const pergunta_nivel = document.querySelector('.nivel');
 pergunta_nivel.innerHTML = `PERGUNTA ${perguntaAtual + 1}`
 
 
@@ -50,7 +50,7 @@ const quiz = [
         nome: ['timao', 'pal'],
         classe: ['btn__timao', 'btn__palmeiras'],
         class_img: ['timao__icon', 'palmeiras__icon'],
-        correto: 'imagens/palmeiras_img.png'
+        correto: 'pal'
     },
     {
         pergunta: "Quantos ovos uma barata pode produzir?",
@@ -58,15 +58,15 @@ const quiz = [
         nome: ['cem', 'quientos', 'oitocentos'],
         classe: ['cem', 'quientos', 'oitocentos'],
         class_img: ['none', 'none', 'none'],
-        correto: '800'
+        correto: 'oitocentos'
     },
     {
         pergunta: "As baratas tem uma incrivel regeneração e podem viver dias sem a cabeça e, se perder uma das patas, elas conseguem se regenerar em poucos dias.",
         alternativas: ['Verdade', 'Mentira'],
-        nome: ['verdade', 'verdade'],
+        nome: ['verdade', 'mentira'],
         classe: ['verdade', 'mentira'],
         class_img: ['none', 'none'],
-        correto: 'Verdade'
+        correto: 'verdade'
     },
     {
         pergunta: "Que música tocou de fundo o jogo todo?",
@@ -74,7 +74,7 @@ const quiz = [
         nome: ['camila', 'camila__camila', 'proibida_pra_mim'],
         classe: ['camila', 'camila__camila', 'proibida_pra_mim'],
         class_img: ['none', 'none', 'none'],
-        correto: 'Camila, Camila'
+        correto: 'camila__camila'
     }
 
 ]
@@ -129,12 +129,58 @@ btn_todas_respostas.forEach((btn) => {
             let btn_todas_respostas = document.querySelectorAll('.btn');
 
             btn_todas_respostas.forEach(b => {
-                b.classList.remove('selecionado');
+                b.classList.remove('selecionado')
             })
-
+            
             btn.classList.add('selecionado');
 
-        })
-})
+            if(btn.classList.contains('selecionado')){
+                const imgTitulo = document.querySelector('.titulo img');
+                imgTitulo.src = 'imagens/confirmar_resposta.png';
+
+                animacaoClick(nomeDiv);
+            }
+        });
+
+
+});
 
 //Dando a resposta correta
+
+function animacaoClick(nomeDiv) {
+    const imgTitulo = document.querySelector('.titulo img');
+
+    imgTitulo.addEventListener('mousedown', () => {
+        imgTitulo.src = 'imagens/confirmar_resposta_click.png';
+        imgTitulo.style.transform = 'translateY(5px)';
+        
+    });
+
+    imgTitulo.addEventListener('mouseup', () => {
+        imgTitulo.src = 'imagens/confirmar_resposta.png';
+        imgTitulo.style.transform = 'translateY(-3px)';
+        
+        
+    })
+    imgTitulo.addEventListener('click', () => {
+        verificaResposta(nomeDiv);
+    })
+
+
+}
+
+function verificaResposta(nome) {
+    const imgTitulo = document.querySelector('.titulo img');
+    if(nome == quiz[perguntaAtual].correto) {
+        setTimeout(()=> {
+            imgTitulo.src = 'imagens/acertou.png';
+        }, 2000);
+    }else{
+        setTimeout(()=> {
+            imgTitulo.src = 'imagens/errou.png';
+        }, 2000);
+
+    }
+
+
+}

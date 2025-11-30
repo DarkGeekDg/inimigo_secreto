@@ -34,11 +34,10 @@ btn_musica.addEventListener('click', () => {
 // =================
 // NIVEL
 // =================
-let perguntaAtual = 3;
+
+const nivel = 1;
 const pergunta_nivel = document.querySelector('.nivel');
-pergunta_nivel.innerHTML = `PERGUNTA ${perguntaAtual + 1}`
-
-
+pergunta_nivel.innerHTML = `PERGUNTA ${parseInt(nivel) + 1}`
 // =================
 // PERGUNTAS
 // =================
@@ -78,7 +77,7 @@ const quiz = [
     }
 
 ]
-pergunta.innerHTML = quiz[perguntaAtual].pergunta;
+pergunta.innerHTML = quiz[nivel].pergunta;
 
 // =================
 // Criando Botões de resposta
@@ -91,7 +90,7 @@ function criaBtnResposta(indice, nome, classe, class_img) {
     btn_resposta.setAttribute('name',nome)
     btn_resposta.classList.add('btn', classe);
     
-    if(perguntaAtual == 0) {
+    if(nivel == 0) {
         let imagemGerada = document.createElement('img');
         imagemGerada.classList.add(class_img);
         imagemGerada.src = quiz[0].alternativas[indice];
@@ -99,7 +98,7 @@ function criaBtnResposta(indice, nome, classe, class_img) {
     }else{
         let textoGerado = document.createElement('p');
         textoGerado.classList.add('texto__gerado');
-        textoGerado.textContent = quiz[perguntaAtual].alternativas[indice];
+        textoGerado.textContent = quiz[nivel].alternativas[indice];
         btn_resposta.appendChild(textoGerado)
     }
     
@@ -110,9 +109,9 @@ function criaBtnResposta(indice, nome, classe, class_img) {
 
 //Criando botões dinamicos
 
-for(let i = 0; quiz[perguntaAtual].alternativas.length > i; i++){
-    
-    criaBtnResposta(i, quiz[perguntaAtual].nome[i], quiz[perguntaAtual].classe[i],quiz[perguntaAtual].class_img[i]);
+for(let i = 0; quiz[nivel].alternativas.length > i; i++){
+
+    criaBtnResposta(i, quiz[nivel].nome[i], quiz[nivel].classe[i],quiz[nivel].class_img[i]);
     
 }
 
@@ -137,8 +136,8 @@ btn_todas_respostas.forEach((btn) => {
             if(btn.classList.contains('selecionado')){
                 const imgTitulo = document.querySelector('.titulo img');
                 imgTitulo.src = 'imagens/confirmar_resposta.png';
-
                 animacaoClick(nomeDiv);
+                
             }
         });
 
@@ -159,28 +158,36 @@ function animacaoClick(nomeDiv) {
     imgTitulo.addEventListener('mouseup', () => {
         imgTitulo.src = 'imagens/confirmar_resposta.png';
         imgTitulo.style.transform = 'translateY(-3px)';
-        
-        
-    })
-    imgTitulo.addEventListener('click', () => {
         verificaResposta(nomeDiv);
+        
     })
-
 
 }
 
 function verificaResposta(nome) {
     const imgTitulo = document.querySelector('.titulo img');
-    if(nome == quiz[perguntaAtual].correto) {
+    let btn_todas_respostas = document.querySelectorAll('.btn');
+
+    let segundos = 1;
+    if(nome == quiz[nivel].correto) {
         setTimeout(()=> {
             imgTitulo.src = 'imagens/acertou.png';
-        }, 2000);
+            
+            btn_todas_respostas.forEach(b => {
+                b.classList.remove('selecionado');
+            })
+
+        }, segundos * 1000);
+          
     }else{
         setTimeout(()=> {
             imgTitulo.src = 'imagens/errou.png';
-        }, 2000);
-
+            
+            btn_todas_respostas.forEach(b => {
+                b.classList.remove('selecionado');
+            })
+        }, segundos * 1000);
+        
     }
-
 
 }

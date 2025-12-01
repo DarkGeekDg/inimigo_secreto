@@ -168,8 +168,10 @@ function verificaResposta(nome) {
             btn_todas_respostas.forEach(b => {
                 b.classList.remove('selecionado');
             })
-
-            proximoNivel();
+            setTimeout(() => {
+                proximoNivel();
+            }, 3000 );
+            
         }, segundos * 1000);
           
     }else{
@@ -189,19 +191,23 @@ function proximoNivel() {
     nivel++;
 
     if(nivel >= quiz.length) {
-        nivel = 0;
+        ultimaTela();
+    }else {
+        localStorage.setItem('nivel', nivel);
+        carregarPergunta();
     }
-    localStorage.setItem('nivel', nivel);
-    carregarPergunta();
+    
 }
 
 //Função que vai carregar as perguntas
 function carregarPergunta() {
-    console.log(nivel);
+    imgTitulo.src = 'imagens/QUIZ THITHI EDITION.png'
     const pergunta_nivel = document.querySelector('.nivel');
     pergunta_nivel.innerHTML = `PERGUNTA ${parseInt(nivel) + 1}`
     //Atualizando a pergunta
-    pergunta.innerHTML = quiz[nivel].pergunta;
+    if(nivel <= quiz.length) {
+        pergunta.innerHTML = quiz[nivel].pergunta;
+    }    
 
     //Apaga os botões antigos
     let divRespostas = document.querySelector('.btn__respostas');
@@ -221,7 +227,14 @@ carregarPergunta();
 console.log(quiz.length);
 
 
-
+function ultimaTela() {
+    pergunta.innerHTML = 'FIM DE JOGO!';
+    const pergunta_nivel = document.querySelector('.nivel');
+    pergunta_nivel.innerHTML = ''
+    let divRespostas = document.querySelector('.btn__respostas');
+    divRespostas.innerHTML = 'Parabéns, você ganhou o premio:\nA tristeza eterna e imensuravel de Thiago Menezes.';
+    localStorage.clear();
+}
 
 
 

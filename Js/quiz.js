@@ -2,10 +2,10 @@
 // ELEMENTOS
 // =================
 const pergunta = document.querySelector('.pergunta p');
-//MUSICA
 const musica = document.querySelector('audio');
 const img_musica = document.querySelector('.img_musica');
 const btn_musica = document.querySelector('.musica');
+const imgTitulo = document.querySelector('.titulo img');
 
 // =================
 // SISTEMA DE MÚSICA
@@ -31,13 +31,6 @@ btn_musica.addEventListener('click', () => {
     console.log(`status da musica: ${status_musica}`)
 })
 
-// =================
-// NIVEL
-// =================
-
-const nivel = 1;
-const pergunta_nivel = document.querySelector('.nivel');
-pergunta_nivel.innerHTML = `PERGUNTA ${parseInt(nivel) + 1}`
 // =================
 // PERGUNTAS
 // =================
@@ -77,7 +70,14 @@ const quiz = [
     }
 
 ]
-pergunta.innerHTML = quiz[nivel].pergunta;
+
+// =================
+// NIVEL CARREGADO DO LOCALSTORAGE
+// =================
+let nivel = localStorage.getItem('nivel');
+if(nivel === null) {
+    nivel = 0;
+}
 
 // =================
 // Criando Botões de resposta
@@ -102,57 +102,49 @@ function criaBtnResposta(indice, nome, classe, class_img) {
         btn_resposta.appendChild(textoGerado)
     }
     
-
     divRespostas.appendChild(btn_resposta);
 
-}
-
-//Criando botões dinamicos
-
-for(let i = 0; quiz[nivel].alternativas.length > i; i++){
-
-    criaBtnResposta(i, quiz[nivel].nome[i], quiz[nivel].classe[i],quiz[nivel].class_img[i]);
-    
 }
 
 // =================
 // BOTÕES RESPOSTAS
 // =================
+
+
 //Selecionando o botão da resposta
-let btn_todas_respostas = document.querySelectorAll('.btn');
+function aplicarEventosBotoes() {
+    let btn_todas_respostas = document.querySelectorAll('.btn');
 
-btn_todas_respostas.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            let nomeDiv = btn.getAttribute('name');
-            
-            let btn_todas_respostas = document.querySelectorAll('.btn');
-
-            btn_todas_respostas.forEach(b => {
-                b.classList.remove('selecionado')
-            })
-            
-            btn.classList.add('selecionado');
-
-            if(btn.classList.contains('selecionado')){
-                const imgTitulo = document.querySelector('.titulo img');
-                imgTitulo.src = 'imagens/confirmar_resposta.png';
-                animacaoClick(nomeDiv);
+    btn_todas_respostas.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                let nomeDiv = btn.getAttribute('name');
                 
-            }
-        });
+                let btn_todas_respostas = document.querySelectorAll('.btn');
 
+                btn_todas_respostas.forEach(b => {
+                    b.classList.remove('selecionado')
+                })
+                
+                btn.classList.add('selecionado');
 
-});
+                if(btn.classList.contains('selecionado')){
+                    const imgTitulo = document.querySelector('.titulo img');
+                    imgTitulo.src = 'imagens/confirmar_resposta.png';
+                    animacaoClick(nomeDiv);
+                    
+                }
+            });
+    });
+}
 
 //Dando a resposta correta
 
 function animacaoClick(nomeDiv) {
-    const imgTitulo = document.querySelector('.titulo img');
-
+    
     imgTitulo.addEventListener('mousedown', () => {
         imgTitulo.src = 'imagens/confirmar_resposta_click.png';
         imgTitulo.style.transform = 'translateY(5px)';
-        
+        console.log('clicado');
     });
 
     imgTitulo.addEventListener('mouseup', () => {
@@ -177,6 +169,7 @@ function verificaResposta(nome) {
                 b.classList.remove('selecionado');
             })
 
+            proximoNivel();
         }, segundos * 1000);
           
     }else{
@@ -191,3 +184,44 @@ function verificaResposta(nome) {
     }
 
 }
+
+function proximoNivel() {
+    nivel++;
+
+    if(nivel >= quiz.length) {
+        nivel = 0;
+    }
+    localStorage.setItem('nivel', nivel);
+    carregarPergunta();
+}
+
+//Função que vai carregar as perguntas
+function carregarPergunta() {
+    console.log(nivel);
+    const pergunta_nivel = document.querySelector('.nivel');
+    pergunta_nivel.innerHTML = `PERGUNTA ${parseInt(nivel) + 1}`
+    //Atualizando a pergunta
+    pergunta.innerHTML = quiz[nivel].pergunta;
+
+    //Apaga os botões antigos
+    let divRespostas = document.querySelector('.btn__respostas');
+    divRespostas.innerHTML = '';
+
+    //Criando botões dinamicos
+    for(let i = 0; quiz[nivel].alternativas.length > i; i++){
+        criaBtnResposta(i, quiz[nivel].nome[i], quiz[nivel].classe[i],quiz[nivel].class_img[i]);
+    }
+    aplicarEventosBotoes();
+    
+}
+
+//Inicialização do Quiz
+carregarPergunta();
+
+console.log(quiz.length);
+
+
+
+
+
+

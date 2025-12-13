@@ -8,34 +8,31 @@ const img_musica = document.querySelector('.img_musica');
 const btn_musica = document.querySelector('.musica');
 const imgTitulo = document.querySelector('.titulo img');
 
+//Controle de se pode clicar
+let podeConfirmar = true;
+
 // =================
 // SISTEMA DE MÚSICA
 // =================
 let status_musica = 0;
 img_musica.src = 'imagens/notmusica.png';
-musica.pause()
-//Mutando e desmutando a musica
+musica.pause();
+
 btn_musica.addEventListener('click', () => {
     if(status_musica == 1){
         img_musica.src = 'imagens/notmusica.png';
         musica.pause();
         status_musica = 0;
-        
-    }else if(status_musica == 0){
+    } else {
         img_musica.src = 'imagens/musica.png';
         musica.play();
-        
         status_musica = 1;
-        
     }
-    
-    console.log(`status da musica: ${status_musica}`)
-})
+});
 
 // =================
 // PERGUNTAS
 // =================
-
 const quiz = [
     {
         pergunta: "Qual é o nome completo?\nThiago Menezes...",
@@ -70,7 +67,7 @@ const quiz = [
         correto: 'oitocentos'
     },
     {
-        pergunta: "Curiosidade: As baratas tem uma incrivel regeneração e podem viver dias sem a cabeça e, se perder uma das patas, elas conseguem se regenerar em poucos dias.",
+        pergunta: "Curiosidade: As baratas tem uma incrivel regeneração...",
         alternativas: ['Verdade', 'Mentira'],
         nome: ['verdade', 'mentira'],
         classe: ['verdade', 'mentira'],
@@ -87,188 +84,144 @@ const quiz = [
     },
     {
         pergunta: "Que música tocou de fundo o jogo todo?",
-        alternativas: ['Camila', `Camila, Camila`, `Proibida pra Mim`],
+        alternativas: ['Camila', 'Camila, Camila', 'Proibida pra Mim'],
         nome: ['camila', 'camila__camila', 'proibida_pra_mim'],
         classe: ['camila', 'camila__camila', 'proibida_pra_mim'],
         class_img: ['none', 'none', 'none'],
         correto: 'camila__camila'
     }
-
-]
+];
 
 // =================
-// NIVEL CARREGADO DO LOCALSTORAGE
+// NIVEL
 // =================
 let nivel = localStorage.getItem('nivel');
-if(nivel === null) {
-    nivel = 0;
-}
+if(nivel === null) nivel = 0;
 
 // =================
-// Criando Botões de resposta
+// BOTÕES
 // =================
 function criaBtnResposta(indice, nome, classe, class_img) {
-    
-    let divRespostas = document.querySelector('.btn__respostas')
-    //Botão da resposta e colocando ele na section "btn__resposta"
-    let btn_resposta = document.createElement('button');
-    btn_resposta.setAttribute('name',nome)
-    btn_resposta.classList.add('btn', classe);
-    //quiz.length -2 pq ele vai pegar sempre a penultima pergunta
-    if(nivel == (quiz.length - 2)) {
-        let imagemGerada = document.createElement('img');
-        imagemGerada.classList.add(class_img);
-        imagemGerada.src = quiz[(quiz.length - 2)].alternativas[indice];
-        btn_resposta.appendChild(imagemGerada)
-    }else{
-        let textoGerado = document.createElement('p');
-        textoGerado.classList.add('texto__gerado');
-        textoGerado.textContent = quiz[nivel].alternativas[indice];
-        btn_resposta.appendChild(textoGerado)
-    }
-    
-    divRespostas.appendChild(btn_resposta);
+    const divRespostas = document.querySelector('.btn__respostas');
+    const btn_resposta = document.createElement('button');
 
+    btn_resposta.name = nome;
+    btn_resposta.classList.add('btn', classe);
+
+    if(nivel == (quiz.length - 2)) {
+        const img = document.createElement('img');
+        img.classList.add(class_img);
+        img.src = quiz[nivel].alternativas[indice];
+        btn_resposta.appendChild(img);
+    } else {
+        const texto = document.createElement('p');
+        texto.classList.add('texto__gerado');
+        texto.textContent = quiz[nivel].alternativas[indice];
+        btn_resposta.appendChild(texto);
+    }
+
+    divRespostas.appendChild(btn_resposta);
 }
 
 // =================
-// BOTÕES RESPOSTAS
+// CONTROLE DE SELEÇÃO
 // =================
+let btnSelecionadoAtual = '';
 
-//Selecionando o botão da resposta
-function aplicarEventosBotoes() {
-    let btn_todas_respostas = document.querySelectorAll('.btn');
+function selecionandoBtn() {
+    const todoBtn = document.querySelectorAll('.btn');
 
-    btn_todas_respostas.forEach((btn) => {
-        
-            btn.addEventListener('click', () => {
-                som_efeito.src = 'audio/click1.mp3';
-                let nomeDiv = btn.getAttribute('name');
-                
-                let btn_todas_respostas = document.querySelectorAll('.btn');
+    todoBtn.forEach(btn => {
+        btn.addEventListener('click', () => {
+            todoBtn.forEach(b => b.classList.remove('selecionado'));
+            btn.classList.add('selecionado');
 
-                btn_todas_respostas.forEach(b => {
-                    b.classList.remove('selecionado')
-                })
-                
-                btn.classList.add('selecionado');
-                let click = 0;
-                
-                if(btn.classList.contains('selecionado')){
-                    
-                    const imgTitulo = document.querySelector('.titulo img');
-                    while(click < 1) {
-                        
-                        imgTitulo.src = 'imagens/confirmar_resposta.png';
-                        animacaoClick(nomeDiv);
-                        click++;
-                        
-                    }
-                    
-                    
-                }
-            });
+            btnSelecionadoAtual = btn.name;
+            imgTitulo.src = 'imagens/confirmar_resposta.png';
+        });
     });
 }
 
-//Dando a resposta correta
+// =================
+// CONFIRMAR RESPOSTA (EVENTO ÚNICO)
+// =================
+imgTitulo.addEventListener('mousedown', () => {
+    
+    if(btnSelecionadoAtual === '' || !podeConfirmar) return;//Se nenhum btn for selecionado, não faça nada
 
-function animacaoClick(nomeDiv) {
-    let click = 0;
+    podeConfirmar = false;
 
-    imgTitulo.addEventListener('mousedown', () => {        
-        while(click < 1) {
-            verificaResposta(nomeDiv); 
-            imgTitulo.src = 'imagens/confirmar_resposta_click.png';
-            imgTitulo.style.transform = 'translateY(10px)';   
-            click++; 
-            som_efeito.src = 'audio/click3.mp3';
-            
-        }     
-    })
+    imgTitulo.src = 'imagens/confirmar_resposta_click.png';
+    imgTitulo.style.transform = 'translateY(10px)';
+    som_efeito.src = 'audio/click3.mp3';
 
-}
+    verificaResposta(btnSelecionadoAtual);
+});
 
+// =================
+// VERIFICA RESPOSTA
+// =================
 function verificaResposta(nome) {
-    const imgTitulo = document.querySelector('.titulo img');
-    let btn_todas_respostas = document.querySelectorAll('.btn');
+    const btns = document.querySelectorAll('.btn');
 
-    let segundos = 1;
-    if(nome == quiz[nivel].correto) {
-        setTimeout(()=> {
+    setTimeout(() => {
+        if(nome === quiz[nivel].correto) {
             imgTitulo.src = 'imagens/acertou.png';
-            
-            btn_todas_respostas.forEach(b => {
-                b.classList.remove('selecionado');
-            })
-            setTimeout(() => {
-                
-                proximoNivel();
-            }, 3000 );
-            
-        }, segundos * 1000);
-          
-    }else{
-        setTimeout(()=> {
+            btns.forEach(b => b.classList.remove('selecionado'));
+            setTimeout(proximoNivel, 3000);
+        } else {
             imgTitulo.src = 'imagens/errou.png';
-            
-            btn_todas_respostas.forEach(b => {
-                b.classList.remove('selecionado');
-            })
-        }, segundos * 1000);
-        
-    }
-
+            btns.forEach(b => b.classList.remove('selecionado'));
+            podeConfirmar = true;
+        }
+    }, 1000);
 }
 
+// =================
+// PROXIMO NIVEL
+// =================
 function proximoNivel() {
     nivel++;
-
     if(nivel >= quiz.length) {
         ultimaTela();
-    }else {
+    } else {
         localStorage.setItem('nivel', nivel);
         carregarPergunta();
     }
-    
 }
 
-//Função que vai carregar as perguntas
+// =================
+// CARREGAR PERGUNTA
+// =================
 function carregarPergunta() {
-    imgTitulo.src = 'imagens/QUIZ THITHI EDITION.png'
-    const pergunta_nivel = document.querySelector('.nivel');
-    pergunta_nivel.innerHTML = `PERGUNTA ${parseInt(nivel) + 1}`
-    //Atualizando a pergunta
-    if(nivel <= quiz.length) {
-        pergunta.innerHTML = quiz[nivel].pergunta;
-    }    
+    podeConfirmar = true;
 
-    //Apaga os botões antigos
-    let divRespostas = document.querySelector('.btn__respostas');
+    imgTitulo.src = 'imagens/QUIZ THITHI EDITION.png';
+
+    document.querySelector('.nivel').textContent = `PERGUNTA ${Number(nivel) + 1}`;
+    pergunta.textContent = quiz[nivel].pergunta;
+
+    const divRespostas = document.querySelector('.btn__respostas');
     divRespostas.innerHTML = '';
 
-    //Criando botões dinamicos
-    for(let i = 0; quiz[nivel].alternativas.length > i; i++){
-        criaBtnResposta(i, quiz[nivel].nome[i], quiz[nivel].classe[i],quiz[nivel].class_img[i]);
+    for(let i = 0; i < quiz[nivel].alternativas.length; i++) {
+        criaBtnResposta(i, quiz[nivel].nome[i], quiz[nivel].classe[i], quiz[nivel].class_img[i]);
     }
-    aplicarEventosBotoes();
-    
+
+    btnSelecionadoAtual = '';
+    selecionandoBtn();
 }
 
-//Inicialização do Quiz
-carregarPergunta();
-
-console.log(quiz.length);
-
-
+// =================
+// FIM
+// =================
 function ultimaTela() {
-    pergunta.innerHTML = 'FIM DE JOGO!';
-    const pergunta_nivel = document.querySelector('.nivel');
-    pergunta_nivel.innerHTML = ''
-    let divRespostas = document.querySelector('.btn__respostas');
-    divRespostas.innerHTML = 'Parabéns, você ganhou o premio:\nA tristeza eterna e imensuravel de Thiago Menezes.';
+    pergunta.textContent = 'FIM DE JOGO!';
+    document.querySelector('.nivel').textContent = '';
+    document.querySelector('.btn__respostas').textContent =
+        'Parabéns, você ganhou o premio:\nA tristeza eterna e imensuravel de Thiago Menezes.';
     localStorage.clear();
 }
 
-
-
+// INICIAR
+carregarPergunta();

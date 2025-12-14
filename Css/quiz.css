@@ -66,6 +66,7 @@ body {
     font-family: var(--fonte-pergunta);
     color: white;
     text-shadow: 0px 6px var(--cor-letra);
+    white-space: pre-line;
 }
 
 .img__perguntas {
@@ -165,3 +166,10 @@ audio{
     color: white;
 }
 
+.texto__final {
+    color: white;
+    font-size: 4rem;
+    text-align: center;
+    font-family: var(--fonte-pergunta);
+    white-space: pre-line;
+}

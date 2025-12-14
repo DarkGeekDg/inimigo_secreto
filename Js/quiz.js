@@ -135,9 +135,9 @@ function selecionandoBtn() {
         btn.addEventListener('click', () => {
             todoBtn.forEach(b => b.classList.remove('selecionado'));
             btn.classList.add('selecionado');
-
+            som_efeito.src = 'audio/click1.mp3';
             btnSelecionadoAtual = btn.name;
-            imgTitulo.src = 'imagens/confirmar_resposta.png';
+            imgTitulo.src = 'imagens/btn_confirmar.png';
         });
     });
 }
@@ -147,12 +147,12 @@ function selecionandoBtn() {
 // =================
 imgTitulo.addEventListener('mousedown', () => {
     
-    if(btnSelecionadoAtual === '' || !podeConfirmar) return;//Se nenhum btn for selecionado, não faça nada
+    if(btnSelecionadoAtual === '' || !podeConfirmar) return;//Se nenhum btn for selecionado, não faça nada|| btnConfirmar == false
 
     podeConfirmar = false;
 
-    imgTitulo.src = 'imagens/confirmar_resposta_click.png';
-    imgTitulo.style.transform = 'translateY(10px)';
+    imgTitulo.src = 'imagens/btn_confirmar_click.png';
+    //imgTitulo.style.transform = 'translateY(10px)';
     som_efeito.src = 'audio/click3.mp3';
 
     verificaResposta(btnSelecionadoAtual);
@@ -217,9 +217,11 @@ function carregarPergunta() {
 // =================
 function ultimaTela() {
     pergunta.textContent = 'FIM DE JOGO!';
+    imgTitulo.src = 'imagens/QUIZ THITHI EDITION.png'    
     document.querySelector('.nivel').textContent = '';
-    document.querySelector('.btn__respostas').textContent =
-        'Parabéns, você ganhou o premio:\nA tristeza eterna e imensuravel de Thiago Menezes.';
+    let btnResposta = document.querySelector('.btn__respostas');
+    btnResposta.classList.add('texto__final');
+    btnResposta.textContent = 'PARABÉNS! Você ganhou o premio:\n A tristeza eterna e IMENSURÁVEL de Thiago Menezes.';
     localStorage.clear();
 }
 

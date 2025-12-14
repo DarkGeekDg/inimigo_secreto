@@ -67,7 +67,7 @@ const quiz = [
         correto: 'oitocentos'
     },
     {
-        pergunta: "Curiosidade: As baratas tem uma incrivel regeneração...",
+        pergunta: "Curiosidade:\nO poder de regeneração do corpo da barata é incrível: ela pode sobreviver por vários dias sem a cabeça e, se perder uma das patas, ela consegue se regenerar em poucos dias.",
         alternativas: ['Verdade', 'Mentira'],
         nome: ['verdade', 'mentira'],
         classe: ['verdade', 'mentira'],
